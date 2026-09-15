@@ -310,6 +310,324 @@ section[id]{ scroll-margin-top: 88px; }
   *, *::before, *::after{ scroll-behavior:auto !important; animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
 }
 
+/* ---------- AGRIEYE ASSISTANT ---------- */
+.agrieye-chatbot{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  z-index:2000;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:12px;
+  pointer-events:none;
+}
+.agrieye-launcher,
+.agrieye-chat-window,
+.agrieye-suggestions,
+.agrieye-message,
+.agrieye-input-row,
+.agrieye-header,
+.agrieye-actions button,
+.agrieye-copy-btn,
+.agrieye-send-btn,
+.agrieye-suggestion-btn {
+  font-family:inherit;
+}
+.agrieye-launcher{
+  pointer-events:auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:62px;
+  padding:12px 18px 12px 16px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(135deg, #0d8f50 0%, #17a75d 40%, #ffc93c 145%);
+  color:#fff;
+  font-weight:700;
+  font-size:0.96rem;
+  box-shadow:0 18px 38px -16px rgba(11,122,62,0.62);
+  cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  position:relative;
+  overflow:hidden;
+}
+.agrieye-launcher::before{
+  content:"";
+  position:absolute;
+  inset:-25% auto auto -10%;
+  width:120%;
+  height:180%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform:translateX(-100%);
+  animation:agrieye-shimmer 4s linear infinite;
+}
+@keyframes agrieye-shimmer{ to{ transform:translateX(120%);} }
+.agrieye-launcher:hover{
+  transform:translateY(-2px) scale(1.01);
+  box-shadow:0 20px 42px -18px rgba(11,122,62,0.7);
+}
+.agrieye-launcher:focus-visible,
+.agrieye-chat-window button:focus-visible,
+.agrieye-input:focus-visible,
+.agrieye-suggestion-btn:focus-visible{
+  outline:3px solid rgba(255,122,41,0.4);
+  outline-offset:2px;
+}
+.launcher-icon{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:rgba(255,255,255,0.18);
+  font-size:1.1rem;
+}
+.launcher-text{ white-space:nowrap; }
+.agrieye-chat-window{
+  pointer-events:auto;
+  width:min(420px, calc(100vw - 24px));
+  height:min(640px, calc(100dvh - 96px));
+  border-radius:24px 24px 20px 20px;
+  background:rgba(255,255,255,0.98);
+  border:1px solid rgba(239,228,207,0.9);
+  box-shadow:0 30px 60px -24px rgba(23,34,59,0.4);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  transform-origin:bottom right;
+  animation:agrieye-window-in .22s ease;
+}
+@keyframes agrieye-window-in {
+  from{ opacity:0; transform:translateY(14px) scale(.96);} 
+  to{ opacity:1; transform:translateY(0) scale(1);} 
+}
+.agrieye-chat-window.hidden{ display:none; }
+.agrieye-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px 12px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,251,243,0.96));
+}
+.agrieye-brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.agrieye-avatar{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg, var(--green), var(--green-deep));
+  color:#fff;
+  font-size:1.05rem;
+  flex-shrink:0;
+}
+.agrieye-header-copy{ min-width:0; }
+.agrieye-header-copy h3{
+  font-size:0.98rem;
+  line-height:1.2;
+  margin:0;
+  color:var(--navy);
+}
+.agrieye-header-copy small{
+  display:block;
+  margin-top:2px;
+  font-size:0.7rem;
+  color:var(--slate);
+}
+.agrieye-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.agrieye-actions button{
+  width:30px;
+  height:30px;
+  border-radius:9px;
+  border:1px solid transparent;
+  background:transparent;
+  color:var(--navy);
+  font-size:1rem;
+  cursor:pointer;
+  transition:background .15s ease, border-color .15s ease;
+}
+.agrieye-actions button:hover{
+  background:rgba(22,163,74,0.08);
+  border-color:rgba(22,163,74,0.12);
+}
+.agrieye-body{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+  background:linear-gradient(180deg, rgba(255,250,244,0.72), rgba(255,255,255,0.94));
+}
+.agrieye-message-list{
+  flex:1;
+  overflow-y:auto;
+  padding:16px 14px 8px;
+  scroll-behavior:smooth;
+}
+.agrieye-message-wrap{ display:flex; margin:0 0 12px; }
+.agrieye-message-wrap.user{ justify-content:flex-end; }
+.agrieye-message-wrap.assistant{ justify-content:flex-start; }
+.agrieye-message{
+  max-width:84%;
+  border-radius:18px;
+  padding:12px 14px 11px;
+  line-height:1.55;
+  font-size:0.92rem;
+  position:relative;
+  box-shadow:0 10px 20px -18px rgba(23,34,59,0.35);
+}
+.agrieye-message.assistant{
+  background:#fff;
+  border:1px solid rgba(239,228,207,0.9);
+  color:var(--navy);
+  border-bottom-left-radius:8px;
+}
+.agrieye-message.user{
+  background:linear-gradient(135deg, #0d8f50, #117b4b);
+  color:#fff;
+  border-bottom-right-radius:8px;
+}
+.agrieye-message p,
+.agrieye-message ul,
+.agrieye-message ol{
+  margin:0;
+  padding-left:18px;
+}
+.agrieye-message li + li{ margin-top:4px; }
+.agrieye-message strong{ font-weight:700; }
+.agrieye-message small{
+  display:block;
+  margin-top:8px;
+  opacity:0.72;
+  font-size:0.68rem;
+}
+.agrieye-message-actions{ display:flex; justify-content:flex-end; margin-top:8px; }
+.agrieye-copy-btn{
+  background:rgba(23,34,59,0.04);
+  border:1px solid rgba(23,34,59,0.08);
+  color:var(--navy);
+  border-radius:8px;
+  min-height:28px;
+  padding:5px 8px;
+  font-size:0.7rem;
+  font-weight:600;
+  cursor:pointer;
+}
+.agrieye-copy-btn.copied{
+  background:rgba(22,163,74,0.1);
+  color:var(--green-deep);
+  border-color:rgba(22,163,74,0.2);
+}
+.agrieye-suggestions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:0 14px 12px;
+}
+.agrieye-suggestion-btn{
+  border:1px solid rgba(23,34,59,0.08);
+  background:#fff;
+  color:var(--navy);
+  padding:8px 10px;
+  border-radius:999px;
+  font-size:0.74rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:transform .15s ease, border-color .15s ease, background .15s ease;
+}
+.agrieye-suggestion-btn:hover{
+  border-color:rgba(22,163,74,0.18);
+  background:rgba(22,163,74,0.04);
+  transform:translateY(-1px);
+}
+.agrieye-input-area{
+  padding:12px 14px 14px;
+  border-top:1px solid var(--line);
+  background:rgba(255,255,255,0.95);
+}
+.agrieye-input-row{
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+  background:#fff;
+  border:1px solid rgba(239,228,207,0.9);
+  border-radius:14px;
+  padding:8px 10px 8px 12px;
+}
+.agrieye-input{
+  flex:1;
+  min-height:42px;
+  max-height:120px;
+  resize:none;
+  border:none;
+  outline:none;
+  background:transparent;
+  font:inherit;
+  color:var(--navy);
+  line-height:1.5;
+  font-size:0.9rem;
+}
+.agrieye-input::placeholder{ color:rgba(23,34,59,0.55); }
+.agrieye-send-btn{
+  border:none;
+  border-radius:10px;
+  min-width:44px;
+  height:42px;
+  padding:0 12px;
+  background:linear-gradient(135deg, var(--orange), var(--orange-deep));
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 12px 20px -12px rgba(228,97,26,0.7);
+}
+.agrieye-typing {
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:10px 12px;
+  background:#fff;
+  border:1px solid rgba(239,228,207,0.9);
+  border-radius:14px 14px 14px 6px;
+  min-height:40px;
+}
+.agrieye-typing span {
+  display:block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:rgba(23,34,59,0.4);
+  animation:agrieye-bounce 1.2s infinite ease-in-out;
+}
+.agrieye-typing span:nth-child(2){ animation-delay:0.15s; }
+.agrieye-typing span:nth-child(3){ animation-delay:0.3s; }
+@keyframes agrieye-bounce {
+  0%, 80%, 100% { transform:translateY(0); opacity:.45; }
+  40% { transform:translateY(-5px); opacity:1; }
+}
+@media(max-width:840px){
+  .agrieye-chatbot{ right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); }
+  .agrieye-chat-window{ width:min(420px, calc(100vw - 16px)); height:min(620px, calc(100dvh - 72px)); }
+}
+@media(max-width:480px){
+  .agrieye-chatbot{ right:10px; bottom:10px; }
+  .agrieye-launcher{ min-height:56px; padding:10px 14px 10px 12px; font-size:0.86rem; }
+  .agrieye-chat-window{ width:min(100vw - 12px, 420px); height:min(76dvh, 600px); border-radius:18px 18px 14px 14px; }
+  .agrieye-message{ max-width:88%; }
+}
+
 /* ---------- ENQUIRIES DROPDOWN ---------- */
 .enquiries-wrapper{ position:relative; }
 .enquiries-trigger{ display:inline-flex; align-items:center; gap:5px; background:none; }
@@ -621,6 +939,697 @@ section[id]{ scroll-margin-top: 88px; }
   </div>
   <div class="container foot-bottom"><span>© 2026 AgriEye. All rights reserved.</span><span>Built for India's fields.</span></div>
 </footer>
+
+<div class="agrieye-chatbot" id="agrieyeChatbot">
+  <button class="agrieye-launcher" id="agrieyeLauncher" type="button" aria-label="Open AgriEye Assistant">
+    <span class="launcher-icon">🛰️</span>
+    <span class="launcher-text">AgriEye Assistant</span>
+  </button>
+
+  <div class="agrieye-chat-window hidden" id="agrieyeChatWindow" aria-live="polite" aria-label="AgriEye Assistant chat window">
+    <div class="agrieye-header">
+      <div class="agrieye-brand">
+        <div class="agrieye-avatar">🛰️</div>
+        <div class="agrieye-header-copy">
+          <h3>AgriEye Assistant</h3>
+          <small>Your precision agriculture guide</small>
+        </div>
+      </div>
+      <div class="agrieye-actions">
+        <button type="button" id="agrieyeClearBtn" aria-label="Clear conversation">🗑️</button>
+        <button type="button" id="agrieyeMinimizeBtn" aria-label="Minimize chat">—</button>
+      </div>
+    </div>
+
+    <div class="agrieye-body">
+      <div class="agrieye-message-list" id="agrieyeMessageList"></div>
+      <div class="agrieye-suggestions" id="agrieyeSuggestions"></div>
+      <div class="agrieye-input-area">
+        <div class="agrieye-input-row">
+          <textarea id="agrieyeInput" class="agrieye-input" rows="1" placeholder="Ask about crops, NDVI, pricing, dealer programs..." aria-label="Type your message"></textarea>
+          <button type="button" id="agrieyeSendBtn" class="agrieye-send-btn" aria-label="Send message">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const AGRIEYE_CHAT_KEY = 'agrieye_chat_history';
+const AGRIEYE_CHAT_OPEN_KEY = 'agrieye_chat_open';
+
+const DEFAULT_SUGGESTIONS = [
+  'How does AgriEye work?',
+  'Monitor my field',
+  'What is NDVI?',
+  'Pricing',
+  'How can dealers use AgriEye?',
+  'Carbon & MRV',
+  'Register my field'
+];
+
+const AGRIEYE_KNOWLEDGE = {
+  company: {
+    overview: 'AgriEye is a satellite-driven precision agriculture platform designed for India’s agricultural ecosystem. It turns satellite and other field-related data into practical, field-level monitoring, crop-health insight, and advisory support for farmers, dealers, lenders, insurers, and agri-business partners.',
+    positioning: 'The website positioning is: “Know what every field needs, before it needs it.”',
+    preLaunch: 'AgriEye’s website currently describes the platform as pre-launch. The site also notes that its partner reactions come from pilot outreach and dealer conversations rather than paid customer accounts.'
+  },
+  howItWorks: {
+    step1: 'Register your field. Farmers, dealers, or cooperative representatives can provide the field boundary, crop, field size, location, and basic details. The website says this registration can take under five minutes.',
+    step2: 'AgriEye scans the field from orbit using Sentinel-1 and Sentinel-2 satellite passes, with historical Landsat data and other supporting datasets used in the analytics pipeline.',
+    step3: 'The platform turns those observations into plain-language advisories, including NDVI trends, soil-moisture signals, crop stress patterns, fertilizer recommendations, irrigation timing, and crop-protection guidance where relevant.',
+    step4: 'Repeated monitoring creates a seasonal field-health history that supports lenders, insurers, carbon buyers, and other agricultural stakeholders.'
+  },
+  fieldMonitoring: 'AgriEye provides automated field or plot boundary mapping, crop-stage tracking, crop-health trends, seasonal monitoring, and anomaly detection. No drone is required for the core satellite-monitoring workflow. Users can start with a field boundary and the next satellite pass.',
+  satelliteData: 'AgriEye uses Sentinel-1 SAR, Sentinel-2 optical imagery, historical Landsat data, optional targeted high-resolution imagery for selected samples, weather APIs, and government crop and soil data. High-resolution imagery is optional and targeted, not a universal requirement for every user.',
+  ndvi: 'NDVI stands for Normalized Difference Vegetation Index. It is a satellite-derived indicator used to understand vegetation condition and track changes in crop health over time. AgriEye uses NDVI time-series analysis as part of field monitoring. NDVI helps identify vegetation-health patterns and changes over time, but it is not a stand-alone diagnosis for every crop condition or disease.',
+  evi: 'EVI is another vegetation index used for crop and vegetation analysis. AgriEye uses NDVI and EVI time-series analysis as part of its field analytics.',
+  soilWater: 'AgriEye provides modeled soil-moisture information and irrigation-timing alerts designed to help optimize water use. These insights are derived from available satellite and analytic data rather than being a direct physical measurement of soil moisture everywhere. The goal is to help reduce unnecessary watering and improve timing.',
+  advisory: 'AgriEye provides zone-level recommendations related to fertilizer, crop protection, and irrigation. The deck describes prescription maps as VRA-ready, which means Variable Rate Application. The platform is designed to provide field-specific analytics and advisories, but I do not have enough verified information here to give you an exact treatment or dosage.',
+  farmer: 'For farmers, AgriEye can help with field monitoring, crop-health visibility, stress awareness, irrigation timing insights, fertilizer and crop-protection advisories, seasonal crop-health history, and mobile-friendly delivery through SMS, WhatsApp, or IVR. It is designed to make field decisions more evidence-based, without guaranteeing yield or profit.',
+  dealer: 'AgriEye is designed with a dealer-first approach. It can help dealers monitor farmer fields, provide value-added advisories, improve farmer engagement, identify opportunities before a sale, and support input recommendations. The business model is intentionally dealer-enabled and service-led.',
+  enterprise: 'Enterprise customers can include agri-input companies, lenders, insurers, large organizations, and technology partners. Enterprise functionality includes large-scale field monitoring, analytics, APIs, underwriting and claims data feeds, carbon aggregation and MRV support, multi-district rollout planning, and CRM/ERP integration.',
+  lenderInsurer: 'AgriEye can provide field-level data and evidence that may support underwriting, claims processes, risk assessment, and crop monitoring workflows. It does not guarantee loan approval or automatic insurance claim settlement.',
+  carbon: 'AgriEye includes a Carbon & Traceability module designed to support baseline assessment, activity logging, satellite monitoring, farmer inputs, MRV-ready monitoring, and carbon aggregation. MRV means Measurement, Reporting and Verification. Carbon-credit eligibility depends on methodologies, verification, standards, and buyer requirements, so I would not promise credits or income without those conditions being met.',
+  privacy: 'AgriEye follows a consent-first approach. Farm onboarding is consent-first, data minimization is prioritized, and advanced carbon or traceability data requires opt-in. Field, location, and photo data is used for monitoring and advisory unless the user separately opts into additional programs.',
+  apis: 'AgriEye APIs allow partner organizations to integrate field-health, risk, and monitoring data into existing workflows such as CRM, ERP, lender underwriting, insurance claims, and enterprise systems.',
+  delivery: 'AgriEye can deliver farmer-facing advisories through SMS, WhatsApp, and IVR. Availability may depend on the specific service setup and partner configuration.',
+  pricing: {
+    pilot: 'Pilot / Seed: up to 1,000 hectares monitored at ₹10,000–30,000 per month. Includes NDVI and crop-health monitoring, weekly SMS or WhatsApp advisories, one prescription map per season, and dealer onboarding support.',
+    growth: 'Growth: 1,000–10,000 hectares monitored at ₹30,000–1,00,000 per month. Includes pilot features, soil-moisture and irrigation alerts, API access for CRM/ERP, and priority ground-truth support.',
+    enterprise: 'Enterprise: 10,000+ hectares or custom scope at custom pricing. Includes underwriting and claims data feeds, carbon aggregation and MRV support, dedicated integration support, and multi-district rollout planning.',
+    standalone: 'Standalone field intelligence is listed at ₹50–300 per field per season for standalone advisories outside a dealer or enterprise plan.',
+    carbon: 'Carbon & MRV pricing is custom or success-based where applicable.'
+  },
+  registration: 'AgriEye lets farmers, dealers, and cooperative representatives register a field by providing field or location information, crop information, plot size, and basic contact details. The existing website action is “Register Your Field” via the current form link.',
+  partnership: 'AgriEye works with agriculture dealers, FPOs, input companies, banks, NBFCs, microfinance organizations, insurers, technology partners, and sustainability partners. If you want to partner, use the existing “Partner With AgriEye” form link.',
+  supportedCrops: 'AgriEye is initially focusing on crops such as maize, cotton, sugarcane, rice, and pulses, as examples of crops with significant input expenditure and yield variability. It does not claim these are the only supported crops.',
+  faq: {
+    hardware: 'No special hardware is required for the core satellite-monitoring workflow. AgriEye uses Sentinel-1 and Sentinel-2 satellite data. Users provide their field boundary and ideally a few photos.',
+    dataUsage: 'Registration is consent-first. Location and imagery are used for monitoring and advisory purposes unless the user separately opts into carbon or traceability programs.',
+    dealerRegister: 'Yes. Dealers and cooperative representatives can register fields on behalf of farmers.',
+    advisoryTiming: 'The website states typically within 3–5 days, timed to the next cloud-free satellite pass.',
+    cost: 'Use the current pricing tiers from the website.'
+  },
+  pilot: 'The pitch deck describes an initial pilot approach involving one district, roughly 1,000–5,000 hectares in the executive summary, a high-value crop, and an MVP target of 3,000+ monitored hectares over 6–12 months. It also mentions 200–300 sample farmers, a partner dealer, ground-truth collection, weekly advisories, prescription application per season, and KPI measurement. These are business and pilot-plan details from the deck, not guaranteed current customer availability.',
+  businessModel: 'If you are asking about the business model, the pitch deck describes revenue streams including dealer or enterprise subscriptions, per-field seasonal fees, analytics contracts, insurance and finance data services, carbon aggregation, and value-added services.'
+};
+
+const INTENT_RULES = [
+  { id: 'GREETING', patterns: ['hi','hello','hey','namaste','good morning','good evening','good afternoon'] },
+  { id: 'CASUAL_CONVERSATION', patterns: ['how are you','what can you do','who are you','thanks','thank you','bye','goodbye','that is helpful','kya karta hai','agrieye kya karta hai','agrieye kya hai'] },
+  { id: 'WHO_ARE_YOU', patterns: ['who are you','what are you','what can you help me with','what can you do'] },
+  { id: 'WHAT_IS_AGRIEYE', patterns: ['what is agrieye','what is agri eye','tell me about agrieye','about agrieye','agrieye kya hai','agrieye kya karta hai','kya karta hai'] },
+  { id: 'HOW_IT_WORKS', patterns: ['how does agrieye work','how it works','how does it work','workflow','how does this platform work'] },
+  { id: 'FIELD_REGISTRATION', patterns: ['register my field','register field','field registration','register a field','register farmer field','how to register','mujhe apna farm register karna hai','field register kaise karu'] },
+  { id: 'FIELD_MONITORING', patterns: ['monitor my field','monitor field','field monitoring','track my farm','can agri eye monitor my farm','satellite monitoring','meri field monitor kaise hogi','field ko satellite se kaise check karte ho'] },
+  { id: 'SATELLITE_DATA', patterns: ['satellite data','sentinel','landsat','remote sensing','earth observation'] },
+  { id: 'NDVI', patterns: ['ndvi','normalized difference vegetation index'] },
+  { id: 'EVI', patterns: ['evi'] },
+  { id: 'CROP_HEALTH', patterns: ['crop health','crop stress','monitor crop','crop condition'] },
+  { id: 'SOIL_MOISTURE', patterns: ['soil moisture','soil water','moisture','irrigation timing','water use'] },
+  { id: 'IRRIGATION', patterns: ['when to irrigate','irrigate','irrigation alert','irrigation'] },
+  { id: 'PRESCRIPTIVE_ADVISORY', patterns: ['prescription','prescriptive advisory','recommendations','advisory'] },
+  { id: 'FERTILIZER', patterns: ['fertilizer','nutrient','nitrogen','k fertilizer'] },
+  { id: 'CROP_PROTECTION', patterns: ['crop protection','pesticide','fungicide','spray','disease control'] },
+  { id: 'CARBON', patterns: ['carbon','carbon credits','carbon credit','carbon program'] },
+  { id: 'MRV', patterns: ['mrv','measurement reporting verification'] },
+  { id: 'TRACEABILITY', patterns: ['traceability','traceable supply chain'] },
+  { id: 'DEALER', patterns: ['dealer','agri dealer','input dealer','i am a dealer'] },
+  { id: 'FARMER', patterns: ['farmer','i am a farmer','my farm'] },
+  { id: 'ENTERPRISE', patterns: ['enterprise','large scale','company','agri input company','corporate'] },
+  { id: 'LENDER', patterns: ['lender','loan','bank','nbfc','finance'] },
+  { id: 'INSURER', patterns: ['insurer','insurance','claims','underwriting'] },
+  { id: 'AGRI_INPUT_COMPANY', patterns: ['agri input company','input company','seed company','fertilizer company'] },
+  { id: 'API', patterns: ['api','crm','erp','integration'] },
+  { id: 'CRM', patterns: ['crm','customer relationship management'] },
+  { id: 'ERP', patterns: ['erp','enterprise resource planning'] },
+  { id: 'SMS', patterns: ['sms'] },
+  { id: 'WHATSAPP', patterns: ['whatsapp','wa'] },
+  { id: 'IVR', patterns: ['ivr'] },
+  { id: 'PRIVACY', patterns: ['data safe','privacy','data privacy','is my data safe','how is my data used'] },
+  { id: 'PRICING', patterns: ['price','pricing','cost','how much','kitna','kitne ka','charge','kitna paisa lagega','kitna charge lagega','price lagega'] },
+  { id: 'PILOT', patterns: ['pilot','seed plan','trial','mvp'] },
+  { id: 'PARTNERSHIP', patterns: ['partner with agrieye','partnership','partner'] },
+  { id: 'SUPPORTED_CROPS', patterns: ['supported crops','which crops','maize','cotton','sugarcane','rice','pulses'] },
+  { id: 'BUSINESS_MODEL', patterns: ['business model','revenue model','unit economics','market size','investor','funding'] },
+  { id: 'INVESTMENT', patterns: ['funding','investment','incubation funding'] },
+  { id: 'MARKET', patterns: ['market','tam','sam','som','growth plan'] },
+  { id: 'FAQ', patterns: ['faq','do i need special equipment','how soon','can dealers register fields'] }
+];
+
+const SYNONYM_MAP = {
+  field: ['field','farm','plot','parcel','land'],
+  satellite: ['satellite','satellite imagery','remote sensing','earth observation'],
+  monitoring: ['monitoring','tracking','observation'],
+  advisory: ['advisory','recommendation','guidance'],
+  dealer: ['dealer','agri dealer','input dealer'],
+  insurance: ['insurance','insurer','claims'],
+  finance: ['finance','lender','bank','nbfc'],
+  carbon: ['carbon','carbon credits','carbon program'],
+  farmer: ['farmer','grower'],
+  registration: ['register','registration'],
+  price: ['price','pricing','cost','rate','charge']
+};
+
+const TYPO_MAP = {
+  agriey: 'agrieye',
+  agrieeye: 'agrieye',
+  satlite: 'satellite',
+  irrgation: 'irrigation',
+  prescrption: 'prescription',
+  carbn: 'carbon',
+  ndiv: 'ndvi',
+  whasapp: 'whatsapp',
+  montoring: 'monitoring',
+  regstration: 'registration',
+  loam: 'soil',
+  qus: 'questions'
+};
+
+function normalizeText(rawText) {
+  let normalized = String(rawText || '').toLowerCase().trim();
+  normalized = normalized.replace(/[_\-]+/g, ' ');
+  normalized = normalized.replace(/[^a-z0-9\s]/g, ' ');
+  Object.entries(TYPO_MAP).forEach(([wrong, correct]) => {
+    normalized = normalized.replace(new RegExp(wrong, 'g'), correct);
+  });
+  normalized = normalized.replace(/\s+/g, ' ').trim();
+  return normalized;
+}
+
+function detectIntent(query, context = {}) {
+  const q = normalizeText(query);
+  if (!q) return { id: 'UNKNOWN', score: 0 };
+
+  if (context.lastIntent && (q.includes('and what about') || q.includes('what about') || q.includes('also')) && context.lastIntent === 'NDVI' && q.includes('evi')) {
+    return { id: 'EVI', score: 0.94 };
+  }
+
+  if (context.lastIntent && q.includes('how much') && context.lastIntent === 'DEALER') {
+    return { id: 'PRICING', score: 0.9 };
+  }
+
+  if (context.lastIntent === 'PRICING' && /(\d+(?:\.\d+)?)\s*(hectare|ha|hectares)/.test(q)) {
+    return { id: 'PRICING', score: 0.96 };
+  }
+
+  if (context.lastIntent === 'PRICING' && /\d/.test(q) && (q.includes('hect') || q.includes('ha'))) {
+    return { id: 'PRICING', score: 0.94 };
+  }
+
+  const scores = {};
+  for (const rule of INTENT_RULES) {
+    let score = 0;
+    for (const pattern of rule.patterns) {
+      const normalizedPattern = normalizeText(pattern);
+      if (q.includes(normalizedPattern)) score += 1.5;
+      if (pattern.split(' ').length > 1 && q.includes(pattern.replace(/\s+/g, ''))) score += 0.5;
+    }
+    const words = q.split(' ');
+    for (const word of words) {
+      if (!word) continue;
+      if (rule.patterns.some(p => normalizeText(p).includes(word))) score += 0.15;
+    }
+    if (score > 0) scores[rule.id] = score;
+  }
+
+  if (q.includes('dealer') && q.includes('price')) scores['DEALER'] = (scores['DEALER'] || 0) + 0.5;
+  if (q.includes('price') || q.includes('cost') || q.includes('charge') || q.includes('kitna') || q.includes('paisa') || q.includes('lagega')) scores['PRICING'] = (scores['PRICING'] || 0) + 0.5;
+  if (q.includes('ndvi') && q.includes('evi')) scores['NDVI'] = (scores['NDVI'] || 0) + 0.2;
+  if (q.includes('kya karta hai') || q.includes('kya hai') || q.includes('agrieye kya')) scores['WHAT_IS_AGRIEYE'] = (scores['WHAT_IS_AGRIEYE'] || 0) + 1.2;
+
+  let bestIntent = 'UNKNOWN';
+  let bestScore = 0;
+  Object.entries(scores).forEach(([intent, score]) => {
+    if (score > bestScore) {
+      bestScore = score;
+      bestIntent = intent;
+    }
+  });
+
+  if (bestScore === 0 && context.lastIntent && q.length < 28) {
+    if (['how much','cost','price','kitna','charge'].some(p => q.includes(p))) return { id: 'PRICING', score: 0.72 };
+    if (['what is ndvi','ndvi'].some(p => q.includes(p))) return { id: 'NDVI', score: 0.75 };
+    if (['what about evi','evi'].some(p => q.includes(p))) return { id: 'EVI', score: 0.78 };
+  }
+
+  const hasPriorContext = context.lastIntent && context.lastIntent !== 'UNKNOWN';
+  if (!bestScore && hasPriorContext) {
+    if (q.includes('how much') || q.includes('cost') || q.includes('price')) return { id: 'PRICING', score: 0.7 };
+    if (q.includes('register') || q.includes('field')) return { id: 'FIELD_REGISTRATION', score: 0.68 };
+    if (q.includes('dealer')) return { id: 'DEALER', score: 0.68 };
+  }
+
+  return { id: bestIntent, score: bestScore || 0.1 };
+}
+
+function getLikelyTopic(query, intent) {
+  const q = normalizeText(query);
+  if (q.includes('dealer') || q.includes('partner')) return 'dealer';
+  if (q.includes('farmer') || q.includes('field')) return 'farmer';
+  if (q.includes('carbon') || q.includes('mrv')) return 'carbon';
+  if (q.includes('price') || q.includes('cost') || q.includes('kitna')) return 'pricing';
+  return intent;
+}
+
+function buildAnswerByIntent(intent, query, context = {}) {
+  const q = normalizeText(query);
+  const hectareMatch = q.match(/(\d+(?:\.\d+)?)\s*(hectare|ha|hectares)/);
+  const hectares = hectareMatch ? Number(hectareMatch[1]) : null;
+
+  const randomItem = (items) => items[Math.floor(Math.random() * items.length)];
+
+  const responses = {
+    GREETING: [
+      'Hi! 👋 I’m the AgriEye Assistant. I can help you understand field monitoring, satellite insights, crop advisories, pricing, field registration, carbon & MRV, and how AgriEye works. What would you like to explore?',
+      'Hi there! 🌱 I can help with AgriEye’s field monitoring, advisory workflows, pricing, farmer registration, partnerships, and more. What do you want to know?'
+    ],
+    CASUAL_CONVERSATION: [
+      'I can help with AgriEye and precision agriculture questions — from field monitoring and NDVI to pricing, partnerships, and dealer workflows.',
+      'I’m here to explain AgriEye’s approach to satellite monitoring, advisories, field registration, and partner solutions.'
+    ],
+    WHO_ARE_YOU: [
+      'I’m the AgriEye Assistant — an on-site guide for AgriEye’s platform, field monitoring, advisory workflows, pricing, and partner use cases.',
+      'I’m the AgriEye Assistant. I help explain how the platform works and how it supports farmers, dealers, lenders, insurers, and enterprise partners.'
+    ],
+    WHAT_IS_AGRIEYE: [
+      'AgriEye is a satellite-driven precision agriculture platform focused on Indian agriculture. It turns satellite and field-related data into practical, field-level insights and advisories that help teams monitor health, manage inputs, and make better decisions.',
+      'At its core, AgriEye is designed to turn free satellite data into field-by-field intelligence for monitoring, irrigation, crop health, and advisory workflows.'
+    ],
+    HOW_IT_WORKS: [
+      'AgriEye works in four simple steps: register the field, scan it from orbit using Sentinel-1 and Sentinel-2, generate plain-language advisories, and track the season over time. That repeated monitoring builds the field-health history that farmers, dealers, lenders, and insurers can use.',
+      'The workflow is straightforward: field registration, satellite monitoring, advisory generation, and seasonal tracking. The idea is to turn orbit data into a usable view of what the field needs, before it becomes a problem.'
+    ],
+    FIELD_REGISTRATION: [
+      'AgriEye lets farmers, dealers, and cooperative representatives register a field by providing field or location information, crop details, plot size, and basic contact details. The existing website action is “Register Your Field” and it is designed to take under five minutes.',
+      'If you want to register your field, the process starts with the field boundary, crop, field size, and location information. The website currently points to the “Register Your Field” form.'
+    ],
+    FIELD_MONITORING: [
+      'AgriEye can monitor registered fields through crop-stage tracking, health trends, anomaly detection, and seasonal monitoring. The core workflow uses satellite imagery and does not require a drone.',
+      'Yes — AgriEye is designed to help monitor registered fields with crop-health trends and seasonal tracking. A field boundary and basic crop information are usually enough to begin.'
+    ],
+    SATELLITE_DATA: [
+      'AgriEye uses Sentinel-1 SAR, Sentinel-2 optical imagery, historical Landsat data, optional targeted high-resolution samples, government crop and soil data, and weather data. High-resolution imagery is optional and targeted rather than a universal requirement for every user.',
+      'The platform builds on free public satellite data plus supporting weather and crop datasets. Sentinel-1 and Sentinel-2 form the backbone of the monitoring workflow.'
+    ],
+    NDVI: [
+      'NDVI stands for Normalized Difference Vegetation Index. It is a satellite-derived indicator used to understand vegetation condition and track changes in crop health over time. AgriEye uses NDVI time-series analysis as part of field monitoring.',
+      'NDVI is a common vegetation-health indicator in remote sensing. It helps spot healthy versus stressed vegetation patterns and changes over time, but it does not diagnose every crop condition on its own.'
+    ],
+    EVI: [
+      'EVI is another vegetation index used for crop and vegetation analysis. AgriEye uses NDVI and EVI time-series analysis as part of its analytics workflow.',
+      'EVI complements NDVI by offering another vegetation signal for monitoring crop condition over time.'
+    ],
+    CROP_HEALTH: [
+      'AgriEye helps track crop-health patterns through vegetation indices, seasonal change detection, and stress awareness. The goal is to highlight where field conditions are shifting before they become serious production issues.',
+      'Crop health is interpreted through repeated observations across the season, combining vegetation indices and field-level context.'
+    ],
+    SOIL_MOISTURE: [
+      'AgriEye provides modeled soil-moisture information and irrigation-timing alerts designed to help optimize water use. These insights are derived from available satellite and analytics data rather than direct physical measurement everywhere.',
+      'Soil-moisture insight is treated as modeled intelligence — useful for irrigation planning, not a direct physical probe across every field.'
+    ],
+    IRRIGATION: [
+      'AgriEye can provide modeled soil-moisture and irrigation-timing insights to help identify when a field may need attention. The aim is to reduce unnecessary watering and support better scheduling, not to make a field-specific treatment guarantee.',
+      'The platform is designed to help optimize irrigation timing by looking at soil conditions and field health over time.'
+    ],
+    PRESCRIPTIVE_ADVISORY: [
+      'AgriEye can generate zone-level recommendations for fertilizer, crop protection, and irrigation. The deck describes prescription maps as VRA-ready, which means Variable Rate Application. I would not provide a specific treatment or dosage without verified field data and agronomy context.',
+      'The advisory layer is meant to turn field health into actionable recommendations, including fertilizer, irrigation, and crop-protection guidance where relevant.'
+    ],
+    FERTILIZER: [
+      'AgriEye can support fertilizer recommendation workflows by analyzing vegetation and field conditions over time. It is designed to provide data-driven advisory, but I do not have enough verified information here to give a specific fertilizer dose.',
+      'Fertilizer guidance is part of the advisory logic, but not as a blanket recommendation without field-specific context.'
+    ],
+    CROP_PROTECTION: [
+      'AgriEye can support crop-protection advice at a field and zone level, but it does not replace a field-specific agronomy decision process. I do not have enough verified information here to give a specific treatment, dosage, or chemical recommendation.',
+      'The platform is intended to flag stress patterns and help prioritize monitoring, not to prescribe specific treatment instructions without proper agronomic context.'
+    ],
+    CARBON: [
+      'AgriEye includes a Carbon & Traceability module designed to support baseline assessment, activity logging, satellite monitoring, farmer inputs, MRV-ready monitoring, and carbon aggregation. Eligibility still depends on methodology, verification, standards, and buyer requirements.',
+      'The carbon workflow is designed to support traceability and carbon-credit aggregation, not to promise a credit outcome without the relevant verification and methodology conditions.'
+    ],
+    MRV: [
+      'MRV means Measurement, Reporting and Verification. AgriEye is designed to support MRV-ready monitoring and carbon traceability workflows for sustainability and reporting use cases.',
+      'AgriEye’s carbon module is intended to support the measurement and reporting process needed for verified outcomes.'
+    ],
+    TRACEABILITY: [
+      'Traceability is a core part of the platform’s sustainability story. AgriEye can support baseline tracking, activity logging, and field-level evidence for carbon and supply-chain traceability use cases.',
+      'The traceability layer is designed to connect field evidence with reporting and aggregation workflows.'
+    ],
+    DEALER: [
+      'AgriEye is designed with a dealer-first approach. It can help dealers monitor farmer fields, provide value-added advisories, engage farmers before and beyond a sale, and support better input recommendations.',
+      'For dealers, AgriEye can act like a precision agriculture service layer: monitoring fields, adding advisory value, and improving trust with the farmer.'
+    ],
+    FARMER: [
+      'For farmers, AgriEye can add visibility into crop health, seasonal trends, irrigation timing, advisory quality, and field history. The platform is designed to help farmers make more informed decisions without requiring a drone or a complex field setup.',
+      'AgriEye helps farmers understand what is happening in their field, from crop stress awareness to irrigation and advisory timing.'
+    ],
+    ENTERPRISE: [
+      'AgriEye is designed for enterprise use cases including agri-input companies, lenders, insurers, large organizations, and technology partners. This includes large-scale field monitoring, analytics, APIs, underwriting and claims support, and carbon aggregation workflows.',
+      'Enterprise workflows can include risk and underwriting data feeds, CRM and ERP integration, and multi-district field monitoring programs.'
+    ],
+    LENDER: [
+      'AgriEye can provide field-level data and evidence that may support lending, underwriting, and risk assessment workflows. The website does not suggest it guarantees approvals or automatic decisions.',
+      'For lenders, the value is in better field evidence and crop-risk visibility rather than automation without oversight.'
+    ],
+    INSURER: [
+      'AgriEye can provide field-level monitoring evidence that may support insurance workflows such as claims and crop-risk assessment. It does not automatically approve claims or guarantee outcomes.',
+      'For insurers, the platform adds field evidence and risk context for underwriting and claims-related analysis.'
+    ],
+    AGRI_INPUT_COMPANY: [
+      'AgriEye can support agri-input companies with field-level monitoring, recommendation workflows, dealer engagement, and performance evidence for their products and farmer programs.',
+      'For input companies, the platform helps connect product recommendations to field-level monitoring and advisory outcomes.'
+    ],
+    API: [
+      'AgriEye APIs allow partner organizations to integrate field-health, risk, and monitoring data into existing enterprise workflows such as CRM, ERP, underwriting, claims, and analytics systems.',
+      'The integration story is meant to help partners plug field intelligence into processes they already use.'
+    ],
+    CRM: [
+      'AgriEye can support CRM workflows by feeding field-health and risk data into customer onboarding, renewal, and advisory processes for partner organizations.',
+      'A CRM integration is useful when a partner wants field health to become part of their relationship and servicing workflows.'
+    ],
+    ERP: [
+      'AgriEye can integrate with ERP and enterprise systems to bring field health, risk, and advisory information into operational planning and partner workflows.',
+      'ERP integration supports not just monitoring, but cross-functional operational workflows for large organizations.'
+    ],
+    SMS: [
+      'AgriEye can deliver advisories through SMS where the service setup supports it. This is part of the farmer-facing communication layer.',
+      'SMS is one of the delivery channels for advisories, depending on the service configuration.'
+    ],
+    WHATSAPP: [
+      'AgriEye can deliver advisories via WhatsApp where the service setup supports it. Availability depends on the specific rollout and partner configuration.',
+      'WhatsApp delivery is an option for farmer-facing advisories, but there is no separate phone number or automated bot number shared here.'
+    ],
+    IVR: [
+      'AgriEye can also support IVR-based advisory delivery where it is implemented as part of a service setup. That can be useful in voice-first or low-data environments.',
+      'IVR is included as a possible delivery route for farmers in the product story.'
+    ],
+    PRIVACY: [
+      'AgriEye follows a consent-first approach. Data minimization is prioritized, and advanced carbon or traceability data requires opt-in. Field, location, and photo data is used for monitoring and advisory unless the user separately opts into extra programs.',
+      'AgriEye is designed with a privacy-first approach: consent is required, and data is used for the stated monitoring and advisory purpose unless additional opt-in programs are selected.'
+    ],
+    PRICING: [
+      'AgriEye’s current pricing tiers are: Pilot / Seed ₹10,000–30,000 per month for up to 1,000 hectares; Growth ₹30,000–1,00,000 per month for 1,000–10,000 hectares; Enterprise custom pricing for 10,000+ hectares. Standalone field intelligence is listed at ₹50–300 per field per season. Carbon & MRV pricing is custom or success-based where applicable.',
+      'The website currently lists a three-tier structure: Pilot / Seed, Growth, and Enterprise. If the exact price depends on hectares, the current pricing page is the best reference.'
+    ],
+    PILOT: [
+      'The deck describes the pilot as a district-level MVP with roughly 1,000–5,000 hectares, a high-value crop, and 200–300 sample farmers, plus weekly advisories and KPI tracking. It is a pilot and business-planning concept, not a guarantee of current customer availability.',
+      'The pilot plan is described as a focused rollout to validate field monitoring, advisory quality, and dealer operations.'
+    ],
+    PARTNERSHIP: [
+      'AgriEye works with agriculture dealers, FPOs, input companies, banks, NBFCs, microfinance organizations, insurers, technology partners, and sustainability partners. Use the existing “Partner With AgriEye” form to start a partnership enquiry.',
+      'Partnership opportunities include dealer networks, enterprise programs, sustainability and carbon workflows, and technology integrations.'
+    ],
+    SUPPORTED_CROPS: [
+      'AgriEye is initially focusing on crops such as maize, cotton, sugarcane, rice, and pulses as examples of crops with significant input expenditure and yield variability. The deck does not frame these as the only supported crops.',
+      'The pitch deck highlights crops like maize, cotton, sugarcane, rice, and pulses as priority examples for monitoring and advisory use cases.'
+    ],
+    BUSINESS_MODEL: [
+      'According to the AgriEye pitch deck, revenue streams may include dealer and enterprise subscriptions, per-field seasonal fees, analytics contracts, finance and insurance data services, carbon aggregation, and value-added services.',
+      'The deeper business model is described as a mix of subscription, seasonal field fees, data services, and carbon-traceability products.'
+    ],
+    INVESTMENT: [
+      'According to the AgriEye pitch deck, the incubation funding target is INR 40–50 lakh. It is important to distinguish this from current operational facts on the website.',
+      'The pitch deck mentions INR 40–50 lakh incubation funding as a business-planning figure, not as a live funding status update.'
+    ],
+    MARKET: [
+      'According to the AgriEye pitch deck, market and expansion assumptions are described as part of the business plan. Those are not the same as current site live-customer metrics.',
+      'The deck includes future market and scale assumptions, and those should be treated as projections rather than confirmed current operating results.'
+    ],
+    FAQ: [
+      'The website answers a few common questions directly: no special hardware is required, registration is consent-first, dealers can register fields, advisories are typically received within 3–5 days timed to the next cloud-free satellite pass, and pricing varies by monitoring scale.',
+      'AgriEye’s FAQ is built around practical onboarding questions: equipment, data handling, dealer registration, turnaround time, and pricing.'
+    ],
+    UNKNOWN: [
+      'I don’t have enough verified AgriEye information to answer that accurately. I can help with field monitoring, satellite analytics, crop advisories, soil & water insights, pricing, carbon & MRV, partnerships, or how AgriEye works.',
+      'I’m the AgriEye Assistant, so I’m mainly here to help with AgriEye and precision agriculture. You can ask me about field monitoring, satellite data, crop advisories, pricing, carbon & MRV, or partnerships.'
+    ]
+  };
+
+  const fallback = responses[intent] || responses.UNKNOWN;
+  if (intent === 'PRICING' && hectares !== null) {
+    if (hectares <= 1000) {
+      return 'For ' + hectares + ' hectares, the Pilot / Seed tier is the relevant published range because it covers up to 1,000 monitored hectares. The listed price is ₹10,000–30,000 per month.';
+    }
+    if (hectares <= 10000) {
+      return 'For ' + hectares + ' hectares, the Growth range is the relevant published tier because it covers 1,000–10,000 hectares. The listed price is ₹30,000–1,00,000 per month.';
+    }
+    return 'For ' + hectares + ' hectares, an enterprise or custom scope quote would be more appropriate because the listed enterprise plan begins at 10,000+ hectares.';
+  }
+
+  if (intent === 'DEALER' && (q.includes('how much') || q.includes('price') || q.includes('cost') || q.includes('kitna'))) {
+    return 'AgriEye pricing varies by scale, but the dealer-first model is built around the same pricing tiers used for field monitoring. For dealer rollout planning, the Pilot / Seed and Growth tiers are the most relevant starting points, and the enterprise tier is relevant for larger programs.';
+  }
+
+  return randomItem(fallback);
+}
+
+function determineSuggestions(intent, query) {
+  const q = normalizeText(query);
+  if (intent === 'PRICING') return ['Pilot plan', 'Growth plan', 'Enterprise', 'Field intelligence'];
+  if (intent === 'FARMER') return ['Register my field', 'How long does monitoring take?', 'Do I need special equipment?'];
+  if (intent === 'DEALER') return ['Dealer pricing', 'Register a field', 'Enterprise options'];
+  if (intent === 'WHAT_IS_AGRIEYE' || intent === 'HOW_IT_WORKS') return ['How does AgriEye work?', 'Monitor my field', 'What is NDVI?'];
+  return DEFAULT_SUGGESTIONS;
+}
+
+function buildChatResponse(rawQuery, context) {
+  const q = normalizeText(rawQuery);
+  const intentInfo = detectIntent(q, context);
+  let finalIntent = intentInfo.id;
+
+  if (finalIntent === 'UNKNOWN' && q.includes('ndvi') && q.includes('evi')) finalIntent = 'NDVI';
+  if (finalIntent === 'UNKNOWN' && q.includes('carbon')) finalIntent = 'CARBON';
+  if (finalIntent === 'UNKNOWN' && q.includes('register')) finalIntent = 'FIELD_REGISTRATION';
+  if (finalIntent === 'UNKNOWN' && q.includes('partner')) finalIntent = 'PARTNERSHIP';
+  if (context.lastIntent === 'PRICING' && /\d/.test(q) && /hectare|ha|hectares/.test(q)) finalIntent = 'PRICING';
+  if ((finalIntent === 'UNKNOWN' && (q.includes('how much') || q.includes('price') || q.includes('cost') || q.includes('paisa') || q.includes('kitna')))) finalIntent = 'PRICING';
+  if ((finalIntent === 'UNKNOWN') && (q.includes('kya karta hai') || q.includes('agrieye kya') || q.includes('kya hai'))) finalIntent = 'WHAT_IS_AGRIEYE';
+
+  const responseText = buildAnswerByIntent(finalIntent, rawQuery, context);
+  const suggestions = determineSuggestions(finalIntent, rawQuery);
+  return { intent: finalIntent, text: responseText, suggestions };
+}
+
+function createMessage(sender, text, timestamp) {
+  const wrap = document.createElement('div');
+  wrap.className = 'agrieye-message-wrap ' + sender;
+  const msg = document.createElement('div');
+  msg.className = 'agrieye-message ' + sender;
+
+  const content = document.createElement('div');
+  content.innerHTML = formatMessageText(text);
+  msg.appendChild(content);
+
+  const time = document.createElement('small');
+  time.textContent = timestamp;
+  msg.appendChild(time);
+
+  if (sender === 'assistant') {
+    const actions = document.createElement('div');
+    actions.className = 'agrieye-message-actions';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'agrieye-copy-btn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy assistant response');
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1200);
+      } catch (error) {
+        btn.textContent = 'Copy failed';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+      }
+    });
+    actions.appendChild(btn);
+    msg.appendChild(actions);
+  }
+
+  wrap.appendChild(msg);
+  return wrap;
+}
+
+function formatMessageText(text) {
+  const escaped = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return escaped
+    .replace(/\n/g, '<br>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\•/g, '<br>• ');
+}
+
+function saveChat() {
+  const messages = Array.from(document.querySelectorAll('.agrieye-message-wrap')).map((wrap) => {
+    const message = wrap.querySelector('.agrieye-message');
+    const text = message ? message.textContent.replace(/Copy$/g, '').trim() : '';
+    const sender = wrap.classList.contains('user') ? 'user' : 'assistant';
+    return { sender, message: text, timestamp: new Date().toISOString() };
+  });
+  localStorage.setItem(AGRIEYE_CHAT_KEY, JSON.stringify(messages));
+}
+
+function loadChat() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(AGRIEYE_CHAT_KEY) || '[]');
+    if (!saved.length) {
+      const welcome = createMessage('assistant', 'Hi! I\'m the AgriEye Assistant 🛰️\n\nI can help you understand field monitoring, satellite insights, crop advisories, soil & water intelligence, carbon & traceability, pricing, partnerships, and how AgriEye works.\n\nWhat would you like to know?', new Date().toISOString());
+      const list = document.getElementById('agrieyeMessageList');
+      list.appendChild(welcome);
+      return;
+    }
+    const list = document.getElementById('agrieyeMessageList');
+    list.innerHTML = '';
+    saved.forEach((item) => {
+      list.appendChild(createMessage(item.sender, item.message, new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })));
+    });
+    requestAnimationFrame(() => scrollChatToBottom());
+  } catch (error) {
+    console.warn('Chat history could not be restored:', error);
+  }
+}
+
+function scrollChatToBottom() {
+  const list = document.getElementById('agrieyeMessageList');
+  if (list) list.scrollTop = list.scrollHeight;
+}
+
+function renderSuggestions(suggestions) {
+  const container = document.getElementById('agrieyeSuggestions');
+  container.innerHTML = '';
+  suggestions.forEach((suggestion) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'agrieye-suggestion-btn';
+    button.textContent = suggestion;
+    button.addEventListener('click', () => {
+      const input = document.getElementById('agrieyeInput');
+      input.value = suggestion;
+      input.focus();
+      requestAnimationFrame(() => {
+        sendMessage();
+      });
+    });
+    container.appendChild(button);
+  });
+}
+
+function setChatOpenState(isOpen) {
+  const windowEl = document.getElementById('agrieyeChatWindow');
+  const launcher = document.getElementById('agrieyeLauncher');
+  if (!windowEl || !launcher) return;
+  windowEl.classList.toggle('hidden', !isOpen);
+  launcher.style.display = isOpen ? 'none' : 'inline-flex';
+  localStorage.setItem(AGRIEYE_CHAT_OPEN_KEY, String(isOpen));
+}
+
+function showTypingIndicator() {
+  const list = document.getElementById('agrieyeMessageList');
+  const typing = document.createElement('div');
+  typing.className = 'agrieye-message-wrap assistant';
+  typing.id = 'typing-indicator';
+  typing.innerHTML = '<div class="agrieye-typing"><span></span><span></span><span></span></div>';
+  list.appendChild(typing);
+  scrollChatToBottom();
+}
+
+function hideTypingIndicator() {
+  const indicator = document.getElementById('typing-indicator');
+  if (indicator) indicator.remove();
+}
+
+function sendMessage() {
+  const input = document.getElementById('agrieyeInput');
+  const raw = input.value.trim();
+  if (!raw) return;
+
+  const list = document.getElementById('agrieyeMessageList');
+  list.appendChild(createMessage('user', raw, new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })));
+  input.value = '';
+  input.style.height = 'auto';
+  scrollChatToBottom();
+  saveChat();
+
+  const state = JSON.parse(localStorage.getItem('agrieye_chat_context') || '{}');
+  const response = buildChatResponse(raw, state);
+  const nextContext = { ...state, lastIntent: response.intent, lastQuestion: raw, lastTopic: getLikelyTopic(raw, response.intent) };
+  localStorage.setItem('agrieye_chat_context', JSON.stringify(nextContext));
+
+  renderSuggestions(response.suggestions);
+  showTypingIndicator();
+  setTimeout(() => {
+    hideTypingIndicator();
+    const answer = createMessage('assistant', response.text, new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+    list.appendChild(answer);
+    saveChat();
+    scrollChatToBottom();
+  }, 450);
+}
+
+function clearConversation() {
+  if (!window.confirm('Clear the AgriEye Assistant conversation?')) return;
+  const list = document.getElementById('agrieyeMessageList');
+  list.innerHTML = '';
+  localStorage.removeItem(AGRIEYE_CHAT_KEY);
+  localStorage.removeItem('agrieye_chat_context');
+  const welcome = createMessage('assistant', 'Hi! I\'m the AgriEye Assistant 🛰️\n\nI can help you understand field monitoring, satellite insights, crop advisories, soil & water intelligence, carbon & traceability, pricing, partnerships, and how AgriEye works.\n\nWhat would you like to know?', new Date().toISOString());
+  list.appendChild(welcome);
+  renderSuggestions(DEFAULT_SUGGESTIONS);
+}
+
+function attachChatEvents() {
+  const launcher = document.getElementById('agrieyeLauncher');
+  const windowEl = document.getElementById('agrieyeChatWindow');
+  const closeBtn = document.getElementById('agrieyeMinimizeBtn');
+  const clearBtn = document.getElementById('agrieyeClearBtn');
+  const input = document.getElementById('agrieyeInput');
+  const sendBtn = document.getElementById('agrieyeSendBtn');
+
+  launcher.addEventListener('click', () => setChatOpenState(true));
+  closeBtn.addEventListener('click', () => setChatOpenState(false));
+  clearBtn.addEventListener('click', clearConversation);
+
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  });
+
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    const max = 118;
+    input.style.height = Math.min(input.scrollHeight, max) + 'px';
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !windowEl.classList.contains('hidden')) {
+      setChatOpenState(false);
+    }
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const list = document.getElementById('agrieyeMessageList');
+  const defaultOpen = localStorage.getItem(AGRIEYE_CHAT_OPEN_KEY) === 'true';
+  setChatOpenState(defaultOpen);
+  loadChat();
+  renderSuggestions(DEFAULT_SUGGESTIONS);
+  attachChatEvents();
+  if (!list || list.children.length === 0) {
+    const welcome = createMessage('assistant', 'Hi! I\'m the AgriEye Assistant 🛰️\n\nI can help you understand field monitoring, satellite insights, crop advisories, soil & water intelligence, carbon & traceability, pricing, partnerships, and how AgriEye works.\n\nWhat would you like to know?', new Date().toISOString());
+    list.appendChild(welcome);
+  }
+  scrollChatToBottom();
+});
+
+</script>
 
 <script>
 /* ---------- Mobile nav toggle ---------- */
